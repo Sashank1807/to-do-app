@@ -37,6 +37,7 @@ def get_todos(
 
 
 def create_todo(db: Session, todo: schemas.TodoCreate):
+    """Create a new todo item in SQLite database."""
     subtasks_data = [s.model_dump() for s in todo.subtasks] if todo.subtasks else []
     db_todo = models.Todo(
         title=todo.title,
