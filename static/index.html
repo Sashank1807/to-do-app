@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Pulse — Beautiful & Intelligent Todo App</title>
+  <meta name="description" content="A modern, high-performance Todo application featuring dark mode, subtasks, priority management, glassmorphism design, and celebratory animations.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Canvas overlay for celebration confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-wrapper">
+    <!-- Header Bar -->
+    <header class="app-header">
+      <div class="brand-container">
+        <div class="brand-icon">
+          <i class="fa-solid fa-square-check"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Task<span>Pulse</span></h1>
+          <p class="subtitle">Organize. Prioritize. Celebrate.</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">
+          <i class="fa-solid fa-moon moon-icon"></i>
+          <i class="fa-solid fa-sun sun-icon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="app-main">
+      <!-- Productivity Overview Card -->
+      <section class="overview-card glass-panel">
+        <div class="overview-info">
+          <h2>Productivity Tracker</h2>
+          <p id="productivity-message">Keep momentum going! Completing tasks boosts your score.</p>
+          
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="stat-number" id="stat-total">0</span>
+              <span class="stat-label">Total Tasks</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-box">
+              <span class="stat-number" id="stat-pending">0</span>
+              <span class="stat-label">Pending</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-box">
+              <span class="stat-number highlight" id="stat-completed">0</span>
+              <span class="stat-label">Completed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-ring-container">
+          <div class="progress-circle">
+            <svg class="progress-svg" viewBox="0 0 100 100">
+              <circle class="progress-bg" cx="50" cy="50" r="42"></circle>
+              <circle class="progress-bar" id="progress-bar-circle" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"></circle>
+            </svg>
+            <div class="progress-text">
+              <span id="stat-rate">0%</span>
+              <span class="progress-sub">Done</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Task Creator Form Card -->
+      <section class="task-creator-card glass-panel">
+        <div class="creator-header">
+          <h3><i class="fa-solid fa-plus-circle"></i> Create New Task</h3>
+          <button id="toggle-creator-details" class="text-btn">
+            <span>More details</span> <i class="fa-solid fa-chevron-down"></i>
+          </button>
+        </div>
+
+        <form id="todo-form">
+          <div class="form-main-row">
+            <div class="input-wrapper main-input">
+              <i class="fa-solid fa-pen-nib input-icon"></i>
+              <input type="text" id="todo-title-input" placeholder="What needs to be done today?" required autocomplete="off">
+              <button type="submit" id="add-todo-btn" class="primary-btn">
+                <span>Add Task</span> <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Expandable Form Options -->
+          <div id="creator-details-panel" class="creator-details collapsed">
+            <div class="form-row">
+              <!-- Description -->
+              <div class="input-wrapper full-width">
+                <textarea id="todo-desc-input" placeholder="Add detailed notes or context..." rows="2"></textarea>
+              </div>
+            </div>
+
+            <div class="form-options-grid">
+              <!-- Priority Selector -->
+              <div class="option-group">
+                <label><i class="fa-solid fa-flag"></i> Priority</label>
+                <div class="priority-selector">
+                  <input type="radio" name="priority" id="prio-low" value="Low">
+                  <label for="prio-low" class="prio-badge low"><i class="fa-solid fa-circle"></i> Low</label>
+
+                  <input type="radio" name="priority" id="prio-med" value="Medium" checked>
+                  <label for="prio-med" class="prio-badge medium"><i class="fa-solid fa-circle"></i> Medium</label>
+
+                  <input type="radio" name="priority" id="prio-high" value="High">
+                  <label for="prio-high" class="prio-badge high"><i class="fa-solid fa-fire"></i> High</label>
+                </div>
+              </div>
+
+              <!-- Category Picker -->
+              <div class="option-group">
+                <label><i class="fa-solid fa-folder-open"></i> Category</label>
+                <select id="todo-category-input" class="custom-select">
+                  <option value="Personal">Personal</option>
+                  <option value="Work">Work</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Health">Health</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Learning">Learning</option>
+                </select>
+              </div>
+
+              <!-- Due Date -->
+              <div class="option-group">
+                <label><i class="fa-solid fa-calendar-day"></i> Due Date</label>
+                <input type="date" id="todo-duedate-input" class="custom-date-input">
+              </div>
+            </div>
+
+            <!-- Subtask Creator Builder -->
+            <div class="subtask-builder">
+              <label><i class="fa-solid fa-list-check"></i> Subtasks / Checklist</label>
+              <div class="subtask-input-group">
+                <input type="text" id="subtask-draft-input" placeholder="Add subtask step (press Enter or click +)...">
+                <button type="button" id="add-draft-subtask-btn" class="secondary-btn">
+                  <i class="fa-solid fa-plus"></i> Add
+                </button>
+              </div>
+              <ul id="draft-subtasks-list" class="subtasks-preview-list"></ul>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Filter Controls & Toolbar -->
+      <section class="toolbar-section">
+        <!-- Search Bar -->
+        <div class="search-wrapper glass-panel">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="search-input" placeholder="Search tasks, categories...">
+          <button id="clear-search-btn" class="clear-icon hidden" title="Clear search">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs-wrapper glass-panel">
+          <div class="status-filters" id="status-filters">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="active">Active</button>
+            <button class="filter-tab" data-filter="completed">Completed</button>
+          </div>
+
+          <div class="category-filters-dropdown">
+            <select id="category-filter-select" class="custom-select filter-select">
+              <option value="all">All Categories</option>
+              <option value="Personal">Personal</option>
+              <option value="Work">Work</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Health">Health</option>
+              <option value="Finance">Finance</option>
+              <option value="Learning">Learning</option>
+            </select>
+          </div>
+
+          <div class="actions-right">
+            <button id="clear-completed-btn" class="danger-outline-btn" title="Remove finished tasks">
+              <i class="fa-solid fa-broom"></i> Clear Finished
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Todo List Container -->
+      <section class="task-list-section">
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p>Syncing tasks...</p>
+        </div>
+
+        <!-- Empty State Illustration -->
+        <div id="empty-state" class="empty-state glass-panel hidden">
+          <div class="empty-illustration">
+            <i class="fa-solid fa-sparkles"></i>
+          </div>
+          <h3 id="empty-title">All Caught Up!</h3>
+          <p id="empty-sub">No tasks match your current view. Create a new task or adjust your filters.</p>
+        </div>
+
+        <!-- Animated Task List -->
+        <div id="todo-list" class="todo-cards-grid"></div>
+      </section>
+    </main>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast-container" class="toast-container"></div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
