@@ -132,3 +132,5 @@ def get_stats(db: Session):
         "by_category": by_category,
         "by_priority": by_priority,
     }
+
+    #hi alll
