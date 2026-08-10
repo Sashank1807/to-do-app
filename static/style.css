@@ -168,6 +168,11 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+  transition: transform var(--transition-fast);
+}
+
+.brand-text h1:hover {
+  transform: scale(1.03);
 }
 
 .brand-text h1 span {
