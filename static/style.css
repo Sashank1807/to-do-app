@@ -40,46 +40,46 @@
 
 /* Dark Theme Variables (Default) */
 [data-theme="dark"] {
-  --bg-main: #0b0f19;
-  --bg-gradient: radial-gradient(circle at 15% 15%, #1e1b4b 0%, #0f172a 40%, #0b0f19 90%);
-  --glass-bg: rgba(17, 24, 39, 0.7);
-  --glass-bg-hover: rgba(31, 41, 55, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  --bg-main: #0a0d14;
+  --bg-gradient: linear-gradient(180deg, rgba(10, 12, 20, 0.72) 0%, rgba(15, 20, 32, 0.88) 100%), url('/static/bg-gym.jpg');
+  --glass-bg: rgba(18, 24, 38, 0.55);
+  --glass-bg-hover: rgba(28, 36, 56, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.3);
   
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
 
-  --input-bg: rgba(15, 23, 42, 0.8);
-  --input-border: rgba(255, 255, 255, 0.12);
+  --input-bg: rgba(15, 23, 42, 0.65);
+  --input-border: rgba(255, 255, 255, 0.2);
 
-  --card-bg: rgba(17, 24, 39, 0.6);
-  --card-border: rgba(255, 255, 255, 0.08);
+  --card-bg: rgba(18, 24, 38, 0.55);
+  --card-border: rgba(255, 255, 255, 0.15);
 
-  --progress-trail: rgba(255, 255, 255, 0.08);
+  --progress-trail: rgba(255, 255, 255, 0.12);
 }
 
 /* Light Theme Variables */
 [data-theme="light"] {
-  --bg-main: #f3f4f6;
-  --bg-gradient: radial-gradient(circle at 15% 15%, #e0e7ff 0%, #f3f4f6 50%, #eef2ff 100%);
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-bg-hover: rgba(255, 255, 255, 0.95);
-  --glass-border: rgba(99, 102, 241, 0.15);
-  --glass-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15);
+  --bg-main: #f1f5f9;
+  --bg-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(241, 245, 249, 0.88) 100%), url('/static/bg-gym.jpg');
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-hover: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
   
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --text-muted: #9ca3af;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
 
-  --input-bg: rgba(255, 255, 255, 0.9);
-  --input-border: rgba(99, 102, 241, 0.2);
+  --input-bg: rgba(255, 255, 255, 0.75);
+  --input-border: rgba(99, 102, 241, 0.25);
 
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --card-border: rgba(99, 102, 241, 0.12);
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(255, 255, 255, 0.5);
 
-  --progress-trail: rgba(0, 0, 0, 0.06);
+  --progress-trail: rgba(0, 0, 0, 0.08);
 }
 
 /* --------------------------------------------------------------------------
@@ -95,12 +95,50 @@ body {
   font-family: var(--font-family);
   background: var(--bg-main);
   background-image: var(--bg-gradient);
+  background-size: cover;
+  background-position: center;
   background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.5;
   overflow-x: hidden;
+  position: relative;
   transition: background var(--transition-smooth), color var(--transition-smooth);
+}
+
+/* Liquid Spatial Ambient Orbs */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: 20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: liquidFloat 12s ease-in-out infinite alternate;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -15%;
+  right: 15%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+  animation: liquidFloat 15s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes liquidFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 30px) scale(1.1); }
+  100% { transform: translate(-30px, -20px) scale(0.95); }
 }
 
 #confetti-canvas {
@@ -114,20 +152,29 @@ body {
 }
 
 .app-wrapper {
-  max-width: 900px;
+  max-width: 920px;
   margin: 0 auto;
-  padding: 2rem 1.25rem 4rem 1.25rem;
+  padding: 2.5rem 1.25rem 5rem 1.25rem;
+  position: relative;
+  z-index: 1;
 }
 
-/* Glassmorphism Panel Base */
+/* Liquid Spatial Glassmorphism Panel Base */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
   transition: all var(--transition-smooth);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 35px 70px -15px rgba(99, 102, 241, 0.3), inset 0 1.5px 2px rgba(255, 255, 255, 0.5);
 }
 
 /* --------------------------------------------------------------------------
@@ -735,19 +782,22 @@ textarea:focus {
 
 .todo-card {
   background: var(--card-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
   padding: 1.25rem;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-smooth);
   animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .todo-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--glass-border);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px) scale(1.005);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 50px -10px rgba(99, 102, 241, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }
 
 .todo-card.completed {
