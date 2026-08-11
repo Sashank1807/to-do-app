@@ -14,6 +14,7 @@ class Todo(Base):
     priority = Column(String, default="Medium", index=True)  # Low, Medium, High
     due_date = Column(String, nullable=True, default="")
     completed = Column(Boolean, default=False, index=True)
+    pinned = Column(Boolean, default=False, index=True)
     subtasks_json = Column(Text, default="[]")
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

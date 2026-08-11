@@ -32,8 +32,10 @@ def get_todos(
             )
         )
 
-    # Order by uncompleted first, then by priority, then latest created
-    return query.order_by(models.Todo.completed.asc(), models.Todo.id.desc()).all()
+    # Order by pinned first, then uncompleted, then latest created
+    return query.order_by(
+        models.Todo.pinned.desc(), models.Todo.completed.asc(), models.Todo.id.desc()
+    ).all()
 
 
 def create_todo(db: Session, todo: schemas.TodoCreate):
@@ -46,6 +48,7 @@ def create_todo(db: Session, todo: schemas.TodoCreate):
         priority=todo.priority or "Medium",
         due_date=todo.due_date or "",
         completed=todo.completed,
+        pinned=todo.pinned,
         subtasks_json=json.dumps(subtasks_data),
     )
     db.add(db_todo)
@@ -86,6 +89,17 @@ def toggle_todo(db: Session, todo_id: int):
         return None
 
     db_todo.completed = not db_todo.completed
+    db.commit()
+    db.refresh(db_todo)
+    return db_todo
+
+
+def toggle_pin_todo(db: Session, todo_id: int):
+    db_todo = get_todo_by_id(db, todo_id)
+    if not db_todo:
+        return None
+
+    db_todo.pinned = not db_todo.pinned
     db.commit()
     db.refresh(db_todo)
     return db_todo

@@ -9,8 +9,18 @@ from sqlalchemy.orm import Session
 from .database import engine, Base, get_db
 from . import schemas, crud, models
 
+from sqlalchemy import text
+
 # Create database tables
 Base.metadata.create_all(bind=engine)
+
+# Auto migrate sqlite table for pinned column
+try:
+    with engine.connect() as conn:
+        conn.execute(text("ALTER TABLE todos ADD COLUMN pinned BOOLEAN DEFAULT 0"))
+        conn.commit()
+except Exception:
+    pass
 
 app = FastAPI(
     title="Animated Todo Web App API",
@@ -78,6 +88,53 @@ def toggle_todo(todo_id: int, db: Session = Depends(get_db)):
     if not db_todo:
         raise HTTPException(status_code=404, detail="Todo not found")
     return db_todo
+
+
+@app.patch("/api/todos/{todo_id}/pin", response_model=schemas.TodoResponse)
+def toggle_pin_todo(todo_id: int, db: Session = Depends(get_db)):
+    db_todo = crud.toggle_pin_todo(db, todo_id)
+    if not db_todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    return db_todo
+
+
+@app.get("/api/ai/suggest-subtasks")
+def suggest_subtasks(title: str = Query(..., description="Task title")):
+    t = title.lower()
+    suggestions = []
+
+    if "workout" in t or "gym" in t or "leg" in t or "exercise" in t:
+        suggestions = [
+            "Warmup & Dynamic Stretching (10 min)",
+            "Primary Compound Movement (4 sets)",
+            "Secondary Isolation Exercise (3 sets)",
+            "Core / Abdominal Finisher",
+            "Post-workout Hydration & Protein"
+        ]
+    elif "code" in t or "project" in t or "bug" in t or "app" in t or "fastapi" in t:
+        suggestions = [
+            "Define requirements & specification",
+            "Write backend REST endpoints & models",
+            "Design responsive UI components",
+            "Run unit tests & verify edge cases",
+            "Commit code & push to repository"
+        ]
+    elif "shop" in t or "buy" in t or "store" in t or "grocery" in t:
+        suggestions = [
+            "Check pantry & inventory",
+            "List fresh produce & essentials",
+            "Compare prices / store discounts",
+            "Pick up items & check off list"
+        ]
+    else:
+        suggestions = [
+            f"Prepare initial plan for {title}",
+            f"Execute core step for {title}",
+            f"Review progress & verify results",
+            f"Finalize and wrap up {title}"
+        ]
+
+    return {"title": title, "suggestions": suggestions}
 
 
 @app.delete("/api/todos/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)

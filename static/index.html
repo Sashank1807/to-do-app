@@ -3,38 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Pulse — Beautiful & Intelligent Todo App</title>
-  <meta name="description" content="A modern, high-performance Todo application featuring dark mode, subtasks, priority management, glassmorphism design, and celebratory animations.">
+  <title>TaskPulse — Spatial Task & Focus Application</title>
+  <meta name="description" content="A modern, high-performance Todo and Focus application featuring liquid spatial design, pomodoro focus timer, subtask checklists, and analytics.">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- FontAwesome Icons -->
+  <!-- FontAwesome Glyph Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Custom Styles -->
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  <!-- Fixed Blurred Gym Background Layer -->
+  <div id="bg-blur-layer" class="bg-blur-layer"></div>
+
   <!-- Canvas overlay for celebration confetti -->
   <canvas id="confetti-canvas"></canvas>
 
   <div class="app-wrapper">
     <!-- Header Bar -->
-    <header class="app-header">
-      <div class="brand-container">
-        <div class="brand-icon">
-          <i class="fa-solid fa-square-check"></i>
-        </div>
-        <div class="brand-text">
-          <h1>Task<span>Pulse</span></h1>
-          <p class="subtitle">Plan. Execute. Win.</p>
+    <header class="app-header glass-panel">
+      <div class="header-left">
+        <!-- Hamburger Menu Button -->
+        <button id="hamburger-btn" class="icon-btn hamburger-btn" title="Open Navigation Menu" aria-label="Open Navigation Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="brand-container nav-link-home" style="cursor: pointer;">
+          <div class="brand-icon">
+            <i class="fa-solid fa-square-check"></i>
+          </div>
+          <div class="brand-text">
+            <h1>Task<span>Pulse</span></h1>
+            <p class="subtitle">Spatial Task & Focus Suite</p>
+          </div>
         </div>
       </div>
 
+      <!-- Desktop Navigation Links -->
+      <nav class="desktop-nav">
+        <button class="nav-btn active" data-page="page-home"><i class="fa-solid fa-house"></i> Home</button>
+        <button class="nav-btn" data-page="page-tasks"><i class="fa-solid fa-list-check"></i> Tasks</button>
+        <button class="nav-btn" data-page="page-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+        <button class="nav-btn" data-page="page-focus"><i class="fa-solid fa-stopwatch"></i> Spatial Focus</button>
+      </nav>
+
       <div class="header-actions">
+        <!-- Sound Effects Toggle -->
+        <button id="sound-toggle" class="icon-btn" title="Toggle Sound Effects" aria-label="Toggle Sound Effects">
+          <i class="fa-solid fa-volume-high sound-on-icon"></i>
+          <i class="fa-solid fa-volume-xmark sound-off-icon hidden"></i>
+        </button>
+
         <!-- Theme Toggle -->
         <button id="theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">
           <i class="fa-solid fa-moon moon-icon"></i>
@@ -43,185 +67,359 @@
       </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- Hamburger Navigation Drawer Overlay -->
+    <div id="nav-drawer" class="nav-drawer">
+      <div class="drawer-header">
+        <div class="drawer-brand">
+          <i class="fa-solid fa-square-check"></i>
+          <span>TaskPulse</span>
+        </div>
+        <button id="close-drawer-btn" class="icon-btn" title="Close Menu"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <nav class="drawer-nav">
+        <button class="drawer-nav-btn active" data-page="page-home">
+          <i class="fa-solid fa-house"></i> <span>Home Overview</span>
+        </button>
+        <button class="drawer-nav-btn" data-page="page-tasks">
+          <i class="fa-solid fa-list-check"></i> <span>Task Manager</span>
+        </button>
+        <button class="drawer-nav-btn" data-page="page-dashboard">
+          <i class="fa-solid fa-chart-pie"></i> <span>Analytics & Metrics</span>
+        </button>
+        <button class="drawer-nav-btn" data-page="page-focus">
+          <i class="fa-solid fa-stopwatch"></i> <span>Spatial Focus Timer</span>
+        </button>
+      </nav>
+
+      <div class="drawer-footer">
+        <p>TaskPulse Suite &copy; 2026</p>
+      </div>
+    </div>
+    <div id="drawer-backdrop" class="drawer-backdrop"></div>
+
+    <!-- Main Container Pages -->
     <main class="app-main">
-      <!-- Productivity Overview Card -->
-      <section class="overview-card glass-panel">
-        <div class="overview-info">
-          <h2>Productivity Tracker</h2>
-          <p id="productivity-message">Keep momentum going! Completing tasks boosts your score.</p>
-          
-          <div class="stats-row">
-            <div class="stat-box">
-              <span class="stat-number" id="stat-total">0</span>
-              <span class="stat-label">Total Tasks</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-box">
-              <span class="stat-number" id="stat-pending">0</span>
-              <span class="stat-label">Pending</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-box">
-              <span class="stat-number highlight" id="stat-completed">0</span>
-              <span class="stat-label">Completed</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="progress-ring-container">
-          <div class="progress-circle">
-            <svg class="progress-svg" viewBox="0 0 100 100">
-              <circle class="progress-bg" cx="50" cy="50" r="42"></circle>
-              <circle class="progress-bar" id="progress-bar-circle" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"></circle>
-            </svg>
-            <div class="progress-text">
-              <span id="stat-rate">0%</span>
-              <span class="progress-sub">Done</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Task Creator Form Card -->
-      <section class="task-creator-card glass-panel">
-        <div class="creator-header">
-          <h3><i class="fa-solid fa-plus-circle"></i> Create New Task</h3>
-          <button id="toggle-creator-details" class="text-btn">
-            <span>More details</span> <i class="fa-solid fa-chevron-down"></i>
-          </button>
-        </div>
-
-        <form id="todo-form">
-          <div class="form-main-row">
-            <div class="input-wrapper main-input">
-              <i class="fa-solid fa-pen-nib input-icon"></i>
-              <input type="text" id="todo-title-input" placeholder="What needs to be done today?" required autocomplete="off">
-              <button type="submit" id="add-todo-btn" class="primary-btn">
-                <span>Add Task</span> <i class="fa-solid fa-paper-plane"></i>
+      
+      <!-- PAGE 1: HOME PAGE -->
+      <div id="page-home" class="app-page active">
+        <!-- Hero Banner -->
+        <section class="hero-card glass-panel">
+          <div class="hero-content">
+            <h2>Welcome to <span class="gradient-text">TaskPulse</span></h2>
+            <p>Your spatial productivity command center. Organize goals, track workouts, and maintain focus with high-performance workflows.</p>
+            <div class="hero-actions">
+              <button class="primary-btn nav-to-page" data-page="page-tasks">
+                <i class="fa-solid fa-list-check"></i> Manage Tasks
+              </button>
+              <button class="secondary-btn nav-to-page" data-page="page-focus">
+                <i class="fa-solid fa-stopwatch"></i> Start Focus Mode
               </button>
             </div>
           </div>
+        </section>
 
-          <!-- Expandable Form Options -->
-          <div id="creator-details-panel" class="creator-details collapsed">
-            <div class="form-row">
-              <!-- Description -->
-              <div class="input-wrapper full-width">
-                <textarea id="todo-desc-input" placeholder="Add detailed notes or context..." rows="2"></textarea>
+        <!-- Quick Productivity Overview Card -->
+        <section class="overview-card glass-panel">
+          <div class="overview-info">
+            <div class="overview-title-row">
+              <h2>Productivity Overview</h2>
+              <span class="streak-badge" title="Daily Completion Streak"><i class="fa-solid fa-fire-flame-curved"></i> <span id="home-streak-days">1</span> Day Streak</span>
+            </div>
+            <p id="home-productivity-message">Keep momentum going! Completing tasks boosts your score.</p>
+            
+            <div class="stats-row">
+              <div class="stat-box">
+                <span class="stat-number" id="home-stat-total">0</span>
+                <span class="stat-label">Total Tasks</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-box">
+                <span class="stat-number" id="home-stat-pending">0</span>
+                <span class="stat-label">Pending</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-box">
+                <span class="stat-number highlight" id="home-stat-completed">0</span>
+                <span class="stat-label">Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-ring-container">
+            <div class="progress-circle">
+              <svg class="progress-svg" viewBox="0 0 100 100">
+                <circle class="progress-bg" cx="50" cy="50" r="42"></circle>
+                <circle class="progress-bar" id="home-progress-bar-circle" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"></circle>
+              </svg>
+              <div class="progress-text">
+                <span id="home-stat-rate">0%</span>
+                <span class="progress-sub">Done</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Task Creator -->
+        <section class="task-creator-card glass-panel">
+          <div class="creator-header">
+            <h3><i class="fa-solid fa-bolt"></i> Quick Task Creator</h3>
+          </div>
+          <form id="home-quick-form">
+            <div class="form-main-row">
+              <div class="input-wrapper main-input">
+                <i class="fa-solid fa-pen-nib input-icon"></i>
+                <input type="text" id="home-title-input" placeholder="Type a task and press Enter..." required autocomplete="off">
+                <button type="submit" class="primary-btn">
+                  <span>Add</span> <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- Recent Tasks Preview -->
+        <section class="preview-section glass-panel">
+          <div class="section-title-row">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Pinned & Active Tasks</h3>
+            <button class="text-btn nav-to-page" data-page="page-tasks">View All Tasks <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+          <div id="home-preview-list" class="todo-cards-grid"></div>
+        </section>
+      </div>
+
+      <!-- PAGE 2: TASKS PAGE -->
+      <div id="page-tasks" class="app-page">
+        <!-- Task Creator Form Card -->
+        <section class="task-creator-card glass-panel">
+          <div class="creator-header">
+            <h3><i class="fa-solid fa-plus-circle"></i> Create New Task</h3>
+            <button id="toggle-creator-details" class="text-btn">
+              <span>More details</span> <i class="fa-solid fa-chevron-down"></i>
+            </button>
+          </div>
+
+          <form id="todo-form">
+            <div class="form-main-row">
+              <div class="input-wrapper main-input">
+                <i class="fa-solid fa-pen-nib input-icon"></i>
+                <input type="text" id="todo-title-input" placeholder="What needs to be done today?" required autocomplete="off">
+                <button type="submit" id="add-todo-btn" class="primary-btn">
+                  <span>Add Task</span> <i class="fa-solid fa-paper-plane"></i>
+                </button>
               </div>
             </div>
 
-            <div class="form-options-grid">
-              <!-- Priority Selector -->
-              <div class="option-group">
-                <label><i class="fa-solid fa-flag"></i> Priority</label>
-                <div class="priority-selector">
-                  <input type="radio" name="priority" id="prio-low" value="Low">
-                  <label for="prio-low" class="prio-badge low"><i class="fa-solid fa-circle"></i> Low</label>
-
-                  <input type="radio" name="priority" id="prio-med" value="Medium" checked>
-                  <label for="prio-med" class="prio-badge medium"><i class="fa-solid fa-circle"></i> Medium</label>
-
-                  <input type="radio" name="priority" id="prio-high" value="High">
-                  <label for="prio-high" class="prio-badge high"><i class="fa-solid fa-fire"></i> High</label>
+            <!-- Expandable Form Options -->
+            <div id="creator-details-panel" class="creator-details collapsed">
+              <div class="form-row">
+                <!-- Description -->
+                <div class="input-wrapper full-width">
+                  <textarea id="todo-desc-input" placeholder="Add detailed notes or context..." rows="2"></textarea>
                 </div>
               </div>
 
-              <!-- Category Picker -->
-              <div class="option-group">
-                <label><i class="fa-solid fa-folder-open"></i> Category</label>
-                <select id="todo-category-input" class="custom-select">
-                  <option value="Personal">Personal</option>
-                  <option value="Work">Work</option>
-                  <option value="Shopping">Shopping</option>
-                  <option value="Health">Health</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Learning">Learning</option>
-                </select>
+              <div class="form-options-grid">
+                <!-- Priority Selector -->
+                <div class="option-group">
+                  <label><i class="fa-solid fa-flag"></i> Priority</label>
+                  <div class="priority-selector">
+                    <input type="radio" name="priority" id="prio-low" value="Low">
+                    <label for="prio-low" class="prio-badge low"><i class="fa-solid fa-circle"></i> Low</label>
+
+                    <input type="radio" name="priority" id="prio-med" value="Medium" checked>
+                    <label for="prio-med" class="prio-badge medium"><i class="fa-solid fa-circle"></i> Medium</label>
+
+                    <input type="radio" name="priority" id="prio-high" value="High">
+                    <label for="prio-high" class="prio-badge high"><i class="fa-solid fa-fire"></i> High</label>
+                  </div>
+                </div>
+
+                <!-- Category Picker -->
+                <div class="option-group">
+                  <label><i class="fa-solid fa-folder-open"></i> Category</label>
+                  <select id="todo-category-input" class="custom-select">
+                    <option value="Personal">Personal</option>
+                    <option value="Work">Work</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Health">Health</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Learning">Learning</option>
+                  </select>
+                </div>
+
+                <!-- Due Date -->
+                <div class="option-group">
+                  <label><i class="fa-solid fa-calendar-day"></i> Due Date</label>
+                  <input type="date" id="todo-duedate-input" class="custom-date-input">
+                </div>
               </div>
 
-              <!-- Due Date -->
-              <div class="option-group">
-                <label><i class="fa-solid fa-calendar-day"></i> Due Date</label>
-                <input type="date" id="todo-duedate-input" class="custom-date-input">
+              <!-- Subtask Creator Builder -->
+              <div class="subtask-builder">
+                <div class="subtask-label-row">
+                  <label><i class="fa-solid fa-list-check"></i> Subtasks / Checklist</label>
+                  <button type="button" id="ai-generate-subtasks-btn" class="ai-sparkle-btn" title="Auto-generate steps based on task title">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Smart Breakdown
+                  </button>
+                </div>
+                <div class="subtask-input-group">
+                  <input type="text" id="subtask-draft-input" placeholder="Add subtask step (press Enter or click +)...">
+                  <button type="button" id="add-draft-subtask-btn" class="secondary-btn">
+                    <i class="fa-solid fa-plus"></i> Add
+                  </button>
+                </div>
+                <ul id="draft-subtasks-list" class="subtasks-preview-list"></ul>
               </div>
             </div>
+          </form>
+        </section>
 
-            <!-- Subtask Creator Builder -->
-            <div class="subtask-builder">
-              <label><i class="fa-solid fa-list-check"></i> Subtasks / Checklist</label>
-              <div class="subtask-input-group">
-                <input type="text" id="subtask-draft-input" placeholder="Add subtask step (press Enter or click +)...">
-                <button type="button" id="add-draft-subtask-btn" class="secondary-btn">
-                  <i class="fa-solid fa-plus"></i> Add
-                </button>
-              </div>
-              <ul id="draft-subtasks-list" class="subtasks-preview-list"></ul>
+        <!-- Filter Controls & Toolbar -->
+        <section class="toolbar-section">
+          <!-- Search Bar -->
+          <div class="search-wrapper glass-panel">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="search-input" placeholder="Search tasks, categories...">
+            <button id="clear-search-btn" class="clear-icon hidden" title="Clear search">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="filter-tabs-wrapper glass-panel">
+            <div class="status-filters" id="status-filters">
+              <button class="filter-tab active" data-filter="all">All</button>
+              <button class="filter-tab" data-filter="active">Active</button>
+              <button class="filter-tab" data-filter="completed">Completed</button>
+            </div>
+
+            <div class="category-filters-dropdown">
+              <select id="category-filter-select" class="custom-select filter-select">
+                <option value="all">All Categories</option>
+                <option value="Personal">Personal</option>
+                <option value="Work">Work</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Health">Health</option>
+                <option value="Finance">Finance</option>
+                <option value="Learning">Learning</option>
+              </select>
+            </div>
+
+            <div class="actions-right">
+              <button id="clear-completed-btn" class="danger-outline-btn" title="Remove finished tasks">
+                <i class="fa-solid fa-broom"></i> Clear Finished
+              </button>
             </div>
           </div>
-        </form>
-      </section>
+        </section>
 
-      <!-- Filter Controls & Toolbar -->
-      <section class="toolbar-section">
-        <!-- Search Bar -->
-        <div class="search-wrapper glass-panel">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" id="search-input" placeholder="Search tasks, categories...">
-          <button id="clear-search-btn" class="clear-icon hidden" title="Clear search">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+        <!-- Task List Container -->
+        <section class="task-list-section">
+          <div id="loading-spinner" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p>Syncing tasks...</p>
+          </div>
+
+          <div id="empty-state" class="empty-state glass-panel hidden">
+            <div class="empty-illustration">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3 id="empty-title">All Tasks Completed!</h3>
+            <p id="empty-sub">No tasks match your current filter. Add a new task above.</p>
+          </div>
+
+          <div id="todo-list" class="todo-cards-grid"></div>
+        </section>
+      </div>
+
+      <!-- PAGE 3: DASHBOARD PAGE -->
+      <div id="page-dashboard" class="app-page">
+        <section class="overview-card glass-panel">
+          <div class="overview-info">
+            <div class="overview-title-row">
+              <h2>Productivity Analytics</h2>
+              <span class="streak-badge" title="Daily Completion Streak"><i class="fa-solid fa-fire-flame-curved"></i> <span id="dash-streak-days">1</span> Day Streak</span>
+            </div>
+            <p id="dash-productivity-message">Detailed breakdown of your completed tasks and categories.</p>
+            
+            <div class="stats-row">
+              <div class="stat-box">
+                <span class="stat-number" id="dash-stat-total">0</span>
+                <span class="stat-label">Total Tasks</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-box">
+                <span class="stat-number" id="dash-stat-pending">0</span>
+                <span class="stat-label">Pending</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-box">
+                <span class="stat-number highlight" id="dash-stat-completed">0</span>
+                <span class="stat-label">Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-ring-container">
+            <div class="progress-circle">
+              <svg class="progress-svg" viewBox="0 0 100 100">
+                <circle class="progress-bg" cx="50" cy="50" r="42"></circle>
+                <circle class="progress-bar" id="dash-progress-bar-circle" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"></circle>
+              </svg>
+              <div class="progress-text">
+                <span id="dash-stat-rate">0%</span>
+                <span class="progress-sub">Done</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Category & Priority Breakdown Grid -->
+        <div class="dashboard-grid">
+          <section class="dash-card glass-panel">
+            <h3><i class="fa-solid fa-folder-open"></i> Category Distribution</h3>
+            <div id="category-breakdown-list" class="breakdown-list"></div>
+          </section>
+
+          <section class="dash-card glass-panel">
+            <h3><i class="fa-solid fa-flag"></i> Priority Breakdown</h3>
+            <div id="priority-breakdown-list" class="breakdown-list"></div>
+          </section>
         </div>
+      </div>
 
-        <!-- Filter Tabs -->
-        <div class="filter-tabs-wrapper glass-panel">
-          <div class="status-filters" id="status-filters">
-            <button class="filter-tab active" data-filter="all">All</button>
-            <button class="filter-tab" data-filter="active">Active</button>
-            <button class="filter-tab" data-filter="completed">Completed</button>
+      <!-- PAGE 4: SPATIAL FOCUS PAGE -->
+      <div id="page-focus" class="app-page">
+        <section class="focus-full-card glass-panel">
+          <div class="focus-title-block">
+            <h2><i class="fa-solid fa-stopwatch"></i> Spatial Focus Mode</h2>
+            <p>Eliminate distractions. Select a task below and run your focus interval.</p>
           </div>
 
-          <div class="category-filters-dropdown">
-            <select id="category-filter-select" class="custom-select filter-select">
-              <option value="all">All Categories</option>
-              <option value="Personal">Personal</option>
-              <option value="Work">Work</option>
-              <option value="Shopping">Shopping</option>
-              <option value="Health">Health</option>
-              <option value="Finance">Finance</option>
-              <option value="Learning">Learning</option>
+          <div class="focus-task-selector">
+            <label><i class="fa-solid fa-bullseye"></i> Target Task for Focus Session:</label>
+            <select id="focus-task-select" class="custom-select full-width">
+              <option value="">-- General Focus Session --</option>
             </select>
           </div>
 
-          <div class="actions-right">
-            <button id="clear-completed-btn" class="danger-outline-btn" title="Remove finished tasks">
-              <i class="fa-solid fa-broom"></i> Clear Finished
-            </button>
+          <div class="timer-mode-pills focus-mode-pills">
+            <button class="timer-mode-btn active" data-time="1500"><i class="fa-solid fa-brain"></i> 25m Focus</button>
+            <button class="timer-mode-btn" data-time="300"><i class="fa-solid fa-mug-hot"></i> 5m Rest</button>
+            <button class="timer-mode-btn" data-time="900"><i class="fa-solid fa-dumbbell"></i> 15m Workout</button>
           </div>
-        </div>
-      </section>
 
-      <!-- Todo List Container -->
-      <section class="task-list-section">
-        <!-- Loading Spinner -->
-        <div id="loading-spinner" class="loading-state hidden">
-          <div class="spinner"></div>
-          <p>Syncing tasks...</p>
-        </div>
+          <div class="focus-timer-large" id="focus-timer-display">25:00</div>
 
-        <!-- Empty State Illustration -->
-        <div id="empty-state" class="empty-state glass-panel hidden">
-          <div class="empty-illustration">
-            <i class="fa-solid fa-sparkles"></i>
+          <div class="timer-controls focus-controls-large">
+            <button id="focus-timer-start-btn" class="timer-action-btn play large"><i class="fa-solid fa-play"></i> Start Session</button>
+            <button id="focus-timer-pause-btn" class="timer-action-btn pause large hidden"><i class="fa-solid fa-pause"></i> Pause</button>
+            <button id="focus-timer-reset-btn" class="timer-action-btn reset large"><i class="fa-solid fa-rotate-left"></i> Reset</button>
           </div>
-          <h3 id="empty-title">All Caught Up!</h3>
-          <p id="empty-sub">No tasks match your current view. Create a new task or adjust your filters.</p>
-        </div>
+        </section>
+      </div>
 
-        <!-- Animated Task List -->
-        <div id="todo-list" class="todo-cards-grid"></div>
-      </section>
     </main>
 
     <!-- Toast Notification Overlay -->
@@ -229,7 +427,7 @@
 
     <!-- App Footer -->
     <footer style="text-align: center; margin-top: 3rem; color: var(--text-muted); font-size: 0.8rem;">
-      <p>TaskPulse &copy; 2026. Built with FastAPI & Vanilla Web Stack.</p>
+      <p>TaskPulse &copy; 2026. Built with FastAPI & Spatial Web Architecture.</p>
     </footer>
   </div>
 

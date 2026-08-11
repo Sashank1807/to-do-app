@@ -41,43 +41,43 @@
 /* Dark Theme Variables (Default) */
 [data-theme="dark"] {
   --bg-main: #0a0d14;
-  --bg-gradient: linear-gradient(180deg, rgba(10, 12, 20, 0.72) 0%, rgba(15, 20, 32, 0.88) 100%), url('/static/bg-gym.jpg');
-  --glass-bg: rgba(18, 24, 38, 0.55);
-  --glass-bg-hover: rgba(28, 36, 56, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  --bg-gradient: linear-gradient(180deg, rgba(10, 12, 20, 0.38) 0%, rgba(15, 20, 32, 0.52) 100%), url('/static/bg-gym.jpg');
+  --glass-bg: rgba(15, 20, 32, 0.32);
+  --glass-bg-hover: rgba(25, 32, 50, 0.48);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.4);
   
   --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  --text-secondary: #e2e8f0;
+  --text-muted: #cbd5e1;
 
-  --input-bg: rgba(15, 23, 42, 0.65);
-  --input-border: rgba(255, 255, 255, 0.2);
+  --input-bg: rgba(10, 15, 26, 0.45);
+  --input-border: rgba(255, 255, 255, 0.28);
 
-  --card-bg: rgba(18, 24, 38, 0.55);
-  --card-border: rgba(255, 255, 255, 0.15);
+  --card-bg: rgba(15, 20, 32, 0.30);
+  --card-border: rgba(255, 255, 255, 0.22);
 
-  --progress-trail: rgba(255, 255, 255, 0.12);
+  --progress-trail: rgba(255, 255, 255, 0.15);
 }
 
 /* Light Theme Variables */
 [data-theme="light"] {
   --bg-main: #f1f5f9;
-  --bg-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(241, 245, 249, 0.88) 100%), url('/static/bg-gym.jpg');
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-bg-hover: rgba(255, 255, 255, 0.88);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
+  --bg-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.48) 0%, rgba(241, 245, 249, 0.62) 100%), url('/static/bg-gym.jpg');
+  --glass-bg: rgba(255, 255, 255, 0.42);
+  --glass-bg-hover: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.9);
   
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
 
-  --input-bg: rgba(255, 255, 255, 0.75);
-  --input-border: rgba(99, 102, 241, 0.25);
+  --input-bg: rgba(255, 255, 255, 0.55);
+  --input-border: rgba(99, 102, 241, 0.3);
 
-  --card-bg: rgba(255, 255, 255, 0.7);
-  --card-border: rgba(255, 255, 255, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.45);
+  --card-border: rgba(255, 255, 255, 0.6);
 
   --progress-trail: rgba(0, 0, 0, 0.08);
 }
@@ -94,16 +94,30 @@
 body {
   font-family: var(--font-family);
   background: var(--bg-main);
-  background-image: var(--bg-gradient);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.5;
   overflow-x: hidden;
   position: relative;
   transition: background var(--transition-smooth), color var(--transition-smooth);
+}
+
+/* Fixed Blurred Gym Background Image Layer */
+.bg-blur-layer {
+  position: fixed;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background-image: var(--bg-gradient);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: blur(8px);
+  transform: scale(1.04);
+  pointer-events: none;
+  z-index: 0;
+  transition: background-image var(--transition-smooth);
 }
 
 /* Liquid Spatial Ambient Orbs */
@@ -162,8 +176,8 @@ body::after {
 /* Liquid Spatial Glassmorphism Panel Base */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  backdrop-filter: blur(32px) saturate(210%);
+  -webkit-backdrop-filter: blur(32px) saturate(210%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--radius-lg);
@@ -173,18 +187,363 @@ body::after {
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 35px 70px -15px rgba(99, 102, 241, 0.3), inset 0 1.5px 2px rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 35px 75px -15px rgba(99, 102, 241, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.6);
 }
 
 /* --------------------------------------------------------------------------
-   3. HEADER
+   3. HEADER & NAVIGATION SYSTEM
    -------------------------------------------------------------------------- */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  padding: 0.85rem 1.5rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hamburger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--input-bg);
+  padding: 0.3rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--input-border);
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--transition-fast);
+}
+
+.nav-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-btn.active {
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: 0 4px 14px var(--accent-glow);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Slide-out Hamburger Drawer */
+.nav-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100vh;
+  background: rgba(15, 20, 32, 0.95);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border-right: 1px solid var(--glass-border);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.drawer-nav {
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.drawer-nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.drawer-nav-btn:hover {
+  background: var(--glass-bg-hover);
+  color: var(--text-primary);
+}
+
+.drawer-nav-btn.active {
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: 0 6px 18px var(--accent-glow);
+}
+
+.drawer-footer {
+  padding: 1.25rem;
+  border-top: 1px solid var(--glass-border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   MULTI-PAGE SINGLE PAGE APPLICATION (SPA) SYSTEM
+   -------------------------------------------------------------------------- */
+.app-page {
+  display: none;
+  animation: fadeIn 0.35s ease forwards;
+}
+
+.app-page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero Card (Home Page) */
+.hero-card {
+  padding: 2.25rem 2rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%), var(--glass-bg);
+  text-align: center;
+}
+
+.hero-content h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.gradient-text {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-content p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Section Title Row */
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.preview-section {
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.dash-card {
+  padding: 1.5rem;
+}
+
+.dash-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.breakdown-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.breakdown-bar-bg {
+  height: 8px;
+  background: var(--progress-trail);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.breakdown-bar-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+/* Spatial Focus Page Dedicated Styling */
+.focus-full-card {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(16, 185, 129, 0.15) 100%), var(--glass-bg);
+}
+
+.focus-title-block h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.focus-title-block p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.focus-task-selector {
+  max-width: 500px;
+  margin: 0 auto 2rem auto;
+  text-align: left;
+}
+
+.focus-task-selector label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.focus-mode-pills {
+  justify-content: center;
+  max-width: 450px;
+  margin: 0 auto 2rem auto;
+}
+
+.focus-timer-large {
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2rem;
+  text-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.focus-controls-large {
+  justify-content: center;
+}
+
+.timer-action-btn.large {
+  padding: 0.85rem 2rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav { display: none; }
 }
 
 .brand-container {
@@ -269,7 +628,7 @@ body::after {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%), var(--glass-bg);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%), var(--glass-bg);
 }
 
 .overview-info h2 {
@@ -1119,4 +1478,208 @@ textarea:focus {
   .primary-btn { width: 100%; justify-content: center; }
   .filter-tabs-wrapper { flex-direction: column; align-items: stretch; }
   .status-filters { width: 100%; justify-content: center; }
+}
+
+/* --------------------------------------------------------------------------
+   11. NEW FEATURES: STREAK, POMODORO TIMER, AI SPARKLE, PIN & DRAG
+   -------------------------------------------------------------------------- */
+.overview-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.streak-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(244, 63, 94, 0.25) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #f59e0b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Pomodoro Focus & Workout Timer Card */
+.pomodoro-card {
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(16, 185, 129, 0.12) 100%), var(--glass-bg);
+}
+
+.pomodoro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.pomodoro-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timer-mode-pills {
+  display: flex;
+  gap: 0.4rem;
+  background: var(--input-bg);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--input-border);
+}
+
+.timer-mode-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.timer-mode-btn.active {
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.pomodoro-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.timer-display {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.timer-controls {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.timer-action-btn {
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--transition-fast);
+}
+
+.timer-action-btn.play {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+.timer-action-btn.pause {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+}
+
+.timer-action-btn.reset {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-primary);
+}
+
+.timer-action-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* AI Subtask Magic Button */
+.subtask-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.ai-sparkle-btn {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  border: none;
+  color: white;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.ai-sparkle-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(236, 72, 153, 0.45);
+}
+
+/* Pin Action & Badges */
+.action-btn.pin-btn:hover {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.action-btn.pin-btn.active {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.25);
+}
+
+.badge-pinned {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(244, 63, 94, 0.25) 100%);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+/* Drag and Drop State */
+.todo-card[draggable="true"] {
+  cursor: grab;
+}
+
+.todo-card[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.todo-card.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+}
+
+.todo-card.drag-over {
+  border: 2px dashed var(--accent-primary);
+  box-shadow: 0 0 20px var(--accent-glow);
 }

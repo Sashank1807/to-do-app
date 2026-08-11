@@ -16,6 +16,7 @@ class TodoBase(BaseModel):
     priority: Optional[str] = "Medium"  # Low, Medium, High
     due_date: Optional[str] = ""
     completed: bool = False
+    pinned: bool = False
     subtasks: List[SubTaskSchema] = []
 
 
@@ -30,6 +31,7 @@ class TodoUpdate(BaseModel):
     priority: Optional[str] = None
     due_date: Optional[str] = None
     completed: Optional[bool] = None
+    pinned: Optional[bool] = None
     subtasks: Optional[List[SubTaskSchema]] = None
 
 
