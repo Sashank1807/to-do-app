@@ -1,5 +1,6 @@
 /**
  * TASK PULSE - FRONTEND APPLICATION SCRIPT
+ * // TODO (WIP): Adding audio notification sound effects engine
  * Manages API requests, DOM updates, micro-animations, theme toggles, and confetti effects.
  */
 
